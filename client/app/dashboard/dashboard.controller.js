@@ -31,7 +31,7 @@ var model = {
     category: "Demographics and History",
     title: "Height",
     questionText: "How tall are you?",
-    questionType: "Numeric",
+    questionType: "numeric",
     measurements: ["cm", "feet/inches"],
     ruleType: "rulesDefault",
     ranges: [0, 25, 30],
@@ -41,7 +41,7 @@ var model = {
     category: "Demographics and History",
     title: "Weight",
     questionText: "How much do you weigh?",
-    questionType: "Numeric",
+    questionType: "numeric",
     measurements: ["kg", "stone/pounds"],
     ruleType: "rulesDefault",
     ranges: [0, 25, 30],
@@ -51,7 +51,7 @@ var model = {
     category: "Demographics and History",
     title: "Waist Circumference",
     questionText: "What is the circumference of your waist?",
-    questionType: "Numeric",
+    questionType: "numeric",
     measurements: ["cm", "inches"],
     maleRanges: [0, 90, 100],
     malePoints: [0, 4, 8],
@@ -70,6 +70,42 @@ var model = {
 };
 
 angular.module('fullstackHealthApp')
-  .controller('DashboardCtrl', function ($scope) {
+  .controller('DashboardCtrl', function ($scope, $log) {
     $scope.surveys = model;
+
+
+    $scope.totalItems = 64;
+    $scope.currentPage = 1;
+
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
+
+    $scope.pageChanged = function() {
+        $log.log('Page changed to: ' + $scope.currentPage);
+    };
+
+    //$scope.maxSize = 5;
+    //$scope.bigTotalItems = 175;
+    //$scope.bigCurrentPage = 1;
+
+    $scope.numQuestions = 7;
+
+    $scope.setQuestion = function(questionNumber) {
+        $scope.questionText = $scope.surveys.questions[questionNumber - 1].questionText;
+        $scope.questionType = $scope.surveys.questions[questionNumber - 1].questionType;
+        if($scope.questionType === "likert") {
+            $scope.likertOptions = $scope.surveys.questions[questionNumber -1].likertOptions;
+        }
+        else if($scope.questionType === 'numeric') {
+            $scope.measurements = $scope.surveys.questions[questionNumber - 1].measurements;
+        }
+        else {
+            console.log("Question Type error - check questions are either numeric or likert");
+        }
+
+    };
+
+    $scope.oneOption = { index: 0};//this somehow allows one radio button to be checked
   });
